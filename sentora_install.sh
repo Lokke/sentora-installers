@@ -72,7 +72,7 @@ echo "Detected : $OS  $VER  $ARCH"
 
 if [[ "$OS" = "CentOs" && ("$VER" = "6" || "$VER" = "7" ) || 
       "$OS" = "Ubuntu" && ("$VER" = "12.04" || "$VER" = "14.04" ) || 
-      "$OS" = "debian" && ("$VER" = "7" || "$VER" = "8" ) ]] ; then
+      "$OS" = "debian" && ("$VER" = "7" || "$VER" = "8" || "$VER" = "9" ) ]] ; then
     echo "Ok."
 else
     echo "Sorry, this OS is not supported by Sentora." 
@@ -443,7 +443,19 @@ deb-src http://httpredir.debian.org/debian $(lsb_release -sc)-updates main
 
 deb http://security.debian.org/ $(lsb_release -sc)/updates main
 deb-src http://security.debian.org/ $(lsb_release -sc)/updates main
+EOF    
+    elif [ "$VER" = "9"  ]; then
+        cat > /etc/apt/sources.list <<EOF
+deb http://httpredir.debian.org/debian $(lsb_release -sc) main
+deb-src http://httpredir.debian.org/debian $(lsb_release -sc) main
+
+deb http://httpredir.debian.org/debian $(lsb_release -sc)-updates main
+deb-src http://httpredir.debian.org/debian $(lsb_release -sc)-updates main
+
+deb http://security.debian.org/ $(lsb_release -sc)/updates main
+deb-src http://security.debian.org/ $(lsb_release -sc)/updates main
 EOF
+
     elif [ "$VER" = "7" ]; then
         cat > /etc/apt/sources.list <<EOF
 deb http://httpredir.debian.org/debian $(lsb_release -sc) main
@@ -973,7 +985,7 @@ if [[ "$OS" = "CentOs" ]]; then
     sed -i "s|DocumentRoot \"/var/www/html\"|DocumentRoot $PANEL_PATH/panel|" "$HTTP_CONF_PATH"
 elif [[ "$OS" = "Ubuntu" || "$OS" = "debian" ]]; then
     # disable completely sites-enabled/000-default.conf
-    if [[ "$VER" = "14.04" || "$VER" = "8" ]]; then 
+    if [[ "$VER" = "14.04" || "$VER" = "8" || "$VER" = "9" ]]; then 
         sed -i "s|IncludeOptional sites-enabled|#&|" "$HTTP_CONF_PATH"
     else
         sed -i "s|Include sites-enabled|#&|" "$HTTP_CONF_PATH"
@@ -992,7 +1004,11 @@ fi
 # adjustments for apache 2.4
 if [[ ("$OS" = "CentOs" && "$VER" = "7") || 
       ("$OS" = "Ubuntu" && "$VER" = "14.04") || 
-      ("$OS" = "debian" && "$VER" = "8") ]] ; then 
+      ("$OS" = "debian" && "$VER" = "
+      
+      
+      
+      ") ]] ; then 
     # Order deny,allow / Deny from all   ->  Require all denied
     sed -i 's|Order deny,allow|Require all denied|I'  $PANEL_CONF/apache/httpd.conf
     sed -i '/Deny from all/d' $PANEL_CONF/apache/httpd.conf
